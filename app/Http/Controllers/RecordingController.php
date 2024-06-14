@@ -62,6 +62,7 @@ class RecordingController extends Controller
         Log::info($clientSecret);
         Log::info($clientId);
         Log::info($refreshToken);
+        Log::info('---');
 
         $accessToken = json_decode($accessTokenResponse->body(), true)['access_token'];
 
