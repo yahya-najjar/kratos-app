@@ -59,7 +59,9 @@ class RecordingController extends Controller
 
         ini_set('memory_limit', '-1');
         Log::info($accessTokenResponse->body());
-        Log::info($clientSecret, $clientId, $refreshToken);
+        Log::info($clientSecret);
+        Log::info($clientId);
+        Log::info($refreshToken);
 
         $accessToken = json_decode($accessTokenResponse->body(), true)['access_token'];
 
