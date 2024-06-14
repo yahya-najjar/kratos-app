@@ -45,10 +45,28 @@ class RecordingController extends Controller
 
     private function uploadToDrive(string $filePath, string $fileName){
         $client = new Client();
-        $client->setAuthConfig(storage_path('app/credentials.json'));
         $client->addScope(Drive::DRIVE_FILE);
 
+        $clientId = env('DRIVE_CLIENT_ID');
+        $clientSecret = env('DRIVE_CLIENT_SECRET');
         $refreshToken = env('DRIVE_REFRESH_TOKEN');
+        $accessTokenResponse = Http::post('https://oauth2.googleapis.com/token', [
+            'client_id' => $clientId,
+            'client_secret' => $clientSecret,
+            'refresh_token' => $refreshToken,
+            'grant_type' => 'refresh_token',
+        ]);
+
+        ini_set('memory_limit', '-1');
+
+        $accessToken = json_decode($accessTokenResponse->body(), true)['access_token'];
+
+
+        $client->setClientId($clientId);
+        $client->setClientSecret($clientSecret);
+        $client->setAccessToken($accessToken);
+        $client->refreshToken($refreshToken);
+
         $folderId = env('DRIVE_FOLDER_ID');
 
         $client->refreshToken($refreshToken);
